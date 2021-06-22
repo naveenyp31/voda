@@ -10,6 +10,18 @@ pipeline{
                 url: 'https://github.com/naveenyp31/voda.git'
             }
         }
+        stage('Quality Gate status check'){
+            steps{
+                withSonarQubeEnv('sonar7.6')
+                sh 'mvn sonar:sonar'
+            }
+            timeout(time: 1, unit: 'HOURS') {
+                def qg = waitforQualityGate()
+                if(qg.status != 'ok'){
+                    error "pipeline aborted due to Quality gate failure: ${qg.status}"
+                }           
+            }
+        }
         stage('Build'){
             steps{
                 sh 'mvn clean install -DskipTests'
@@ -18,17 +30,6 @@ pipeline{
         stage('tests'){
             steps{
                 sh 'mvn test'
-            }
-        }
-        stage('deploy into tomcat server'){
-            steps{
-                sshagent(['tomcat9']) {
-                 sh """
-                 scp -o StrictHostKeyChecking=no target/*.war ec2-user@10.0.0.239:/opt/apache-tomcat-9.0.46/webapps/
-                 ssh /opt/apache-tomcat-9.0.46/bin/shutdown.sh
-                 ssh /opt/apache-tomcat-9.0.46/bin/startup.sh
-                 """
-                }
             }
         }
     }
