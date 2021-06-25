@@ -10,21 +10,6 @@ pipeline{
                 url: 'https://github.com/naveenyp31/voda.git'
             }
         }
-        stage('Quality Gate status check'){
-            steps{
-                withSonarQubeEnv('sonar7.6'){
-                sh 'mvn sonar:sonar'
-                }
-                timeout(time: 1, unit: 'HOURS') {
-                    script{
-                        def qg = waitforQualityGate()
-                        if (qg.status != 'ok'){
-                            error "pipeline aborted due to Quality gate failure: ${qg.status}"
-                        }
-                    }  
-                }
-            }
-        }
         stage('Build'){
             steps{
                 sh 'mvn clean install -DskipTests'
@@ -35,5 +20,13 @@ pipeline{
                 sh 'mvn test'
             }
         }
+        stage('Quality Gate status check'){
+            steps{
+                withSonarQubeEnv('sonar7.6'){
+                sh 'mvn sonar:sonar'
+                }
+            }
+        }
+        stage('upload war file to nexus')
     }
 }
