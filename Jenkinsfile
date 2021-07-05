@@ -25,19 +25,17 @@ pipeline{
             steps{
                 nexusArtifactUploader 
                 artifacts: 
-                [[
-                    artifactId: 'addressbook', 
-                    classifier: '', 
-                    file: 'addressbook.war', 
-                    type: 'war'
-                ]], 
-                    credentialsId: 'nexus-artfact', 
-                    groupId: 'com.Nandihal', 
-                    nexusUrl: '15.206.116.125:8081/', 
-                    nexusVersion: 'nexus3', 
-                    protocol: 'http', 
-                    repository: 'release', 
-                    version: '2.0'
+                [[artifactId: 'addressbook', 
+                classifier: '', 
+                file: 'addressbook.war', 
+                type: 'war']], 
+                credentialsId: 'nexus-artfact', 
+                groupId: 'com.Nandihal', 
+                nexusUrl: '15.206.116.125:8081/', 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: 'release', 
+                version: '2.0'
             }
         }
     }
