@@ -18,7 +18,7 @@ pipeline{
         stage('Publish Junit test cases'){
             steps{
                 sh 'mvn test'
-                junit '/target/surefire-reports/TEST-*.xml'
+                junit 'allowEmptyResults: true, /target/surefire-reports/*.xml'
             }
         }
         stage('uploading artifactory to nexus repo'){
